@@ -15,6 +15,7 @@ public class WindowWordCount {
         DataStream<Tuple2<String, Integer>> dataStream = env
                 .socketTextStream("localhost", 9999)
                 .flatMap(new Splitter())
+                //f0是单词，f1是次数
                 .keyBy(value -> value.f0)
                 .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
                 .sum(1);
@@ -24,6 +25,7 @@ public class WindowWordCount {
         env.execute("Window WordCount");
     }
 
+    //对输入参数进行空格分割后输出
     public static class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
         @Override
         public void flatMap(String sentence, Collector<Tuple2<String, Integer>> out) throws Exception {
