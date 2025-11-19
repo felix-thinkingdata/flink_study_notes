@@ -16,8 +16,8 @@ public class ParallelStreamingWordCount {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
 
-        // 创建并行数据源，设置并行度为2
-        DataStream<String> wordStream = env.addSource(new WordSource()).setParallelism(2);
+        // 创建数据源
+        DataStream<String> wordStream = env.addSource(new WordSource());
 
         // 执行WordCount转换逻辑
         SingleOutputStreamOperator<Tuple2<String, Integer>> flatMapResult = wordStream
@@ -32,27 +32,23 @@ public class ParallelStreamingWordCount {
 
                     }
                 })
-                .returns(Types.TUPLE(Types.STRING, Types.INT))
-                .disableChaining()  // 打破算子链，让flatMap独立运行
-                .setParallelism(1); // 设置flatMap并行度为1
+                .returns(Types.TUPLE(Types.STRING, Types.INT));
 
         // 继续处理
         SingleOutputStreamOperator<Tuple2<String, Integer>> wordCounts = flatMapResult
                 // 按单词分组
                 .keyBy(value -> value.f0)
                 // 累加次数
-                .sum(1)
-                .disableChaining()  // 打破算子链，让sum独立运行
-                .setParallelism(1); // 设置sum并行度为1
+                .sum(1);
 
         // 将结果打印到控制台
         wordCounts.print();
 
         // 执行作业
-        env.execute("Parallel Streaming WordCount Job");
+        env.execute("Streaming WordCount Job");
     }
 
-    // 实现ParallelSourceFunction以支持并行执行
+    // 实现SourceFunction
     public static class WordSource implements ParallelSourceFunction<String> {
         private volatile boolean isRunning = true;
         private transient Random random;
