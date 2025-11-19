@@ -1,4 +1,4 @@
-package cn.demo;
+package cn.flinkstudy.wordcount.sources.custom;
 
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -9,16 +9,33 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
 import java.util.Random;
 
-public class StreamingWordCount {
+/**
+ * 基于自定义数据源的词频统计程序
+ *
+ * 本程序演示了如何创建和使用自定义数据源，以及基本的流式词频统计。
+ * 适合学习Flink的自定义数据源概念。
+ *
+ * 功能特点：
+ * - 使用自定义SourceFunction生成随机文本数据
+ * - 模拟真实的数据流场景
+ * - 实时词频统计
+ * - 自动化数据生成，无需外部输入
+ *
+ * 学习要点：
+ * - 自定义SourceFunction的实现
+ * - 数据生成的控制逻辑
+ * - 流式处理的基本模式
+ */
+public class CustomSourceWordCount {
     public static void main(String[] args) throws Exception {
         // 创建流式执行环境
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
-        // 创建自定义数据源，不断生成单词
+        // 创建自定义数据源
         DataStream<String> wordStream = env.addSource(new WordSource());
 
-        // 执行WordCount转换逻辑
+        // 执行词频统计
         SingleOutputStreamOperator<Tuple2<String, Integer>> wordCounts = wordStream
                 // 分词并转换为(word, 1)格式
                 .flatMap((String line, org.apache.flink.util.Collector<Tuple2<String, Integer>> out) -> {
@@ -35,19 +52,21 @@ public class StreamingWordCount {
                 // 累加次数
                 .sum(1);
 
-        // 将结果打印到控制台
+        // 打印结果
         wordCounts.print();
 
         // 执行作业
-        env.execute("Streaming WordCount Job");
+        env.execute("Custom Source WordCount - 自定义数据源词频统计");
     }
 
-    // 自定义SourceFunction，不断模拟生成单词
+    /**
+     * 自定义SourceFunction，不断生成模拟文本数据
+     */
     public static class WordSource implements SourceFunction<String> {
         private volatile boolean isRunning = true;
         private final Random random = new Random();
 
-        // 预定义一些单词库
+        // 预定义单词库
         private final String[] words = {
             "hello", "world", "flink", "streaming", "processing",
             "data", "pipeline", "apache", "real", "time",

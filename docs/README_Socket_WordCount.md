@@ -2,11 +2,21 @@
 
 本目录包含了基于Socket为Source的Flink WordCount样例程序，这是对应书中4.1章节的练习内容。
 
-## 文件说明
+## 📁 文件位置
 
+**注意**：由于项目已重构为更清晰的包结构，Socket WordCount程序现在位于：
+- `src/main/java/cn/flinkstudy/wordcount/sources/socket/SocketWordCount.java` - 基础版本
+- `src/main/java/cn/flinkstudy/wordcount/sources/socket/SocketWindowWordCount.java` - 窗口版本
+
+## 📋 文件说明
+
+### Java 程序
 - `SocketWordCount.java` - 基础版本的Socket WordCount程序
 - `SocketWindowWordCount.java` - 带窗口功能的Socket WordCount程序
+
+### 脚本文件（位于 `scripts/` 目录）
 - `test_socket_wordcount.sh` - 测试脚本
+- `verify_compilation.sh` - 编译验证脚本
 
 ## 程序功能
 
@@ -30,12 +40,12 @@ nc -lk 9999
 
 基础版本（实时统计）：
 ```bash
-mvn compile exec:java -Dexec.mainClass="cn.demo.SocketWordCount" -Dexec.args="localhost 9999"
+mvn compile exec:java -Dexec.mainClass="cn.flinkstudy.wordcount.sources.socket.SocketWordCount" -Dexec.args="localhost 9999"
 ```
 
 窗口版本（每5秒统计一次）：
 ```bash
-mvn compile exec:java -Dexec.mainClass="cn.demo.SocketWindowWordCount" -Dexec.args="localhost 9999"
+mvn compile exec:java -Dexec.mainClass="cn.flinkstudy.wordcount.sources.socket.SocketWindowWordCount" -Dexec.args="localhost 9999"
 ```
 
 **步骤3：发送测试数据**
@@ -53,7 +63,7 @@ flink streaming processing
 ### 方法2：使用测试脚本
 
 ```bash
-./test_socket_wordcount.sh
+./scripts/test_socket_wordcount.sh
 ```
 
 ## 程序特点

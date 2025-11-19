@@ -9,37 +9,74 @@
 
 ### 项目结构说明
 
-本项目是一个Flink学习工程，包含了多个示例程序：
+本项目是一个Flink学习工程，采用了模块化的包结构设计，按功能场景分类：
 
 ```
 flink_study_notes/
-├── src/main/java/cn/demo/           # 基础示例程序
-│   ├── SocketWordCount.java         # Socket基础版本WordCount
-│   ├── SocketWindowWordCount.java   # Socket窗口版本WordCount
-│   ├── StreamingWordCount.java      # 流式WordCount（自定义源）
-│   ├── ParallelStreamingWordCount.java # 并行流式WordCount
-│   └── ...                          # 其他示例程序
-├── src/main/java/cn/thinkingdata/   # 书中章节示例
-│   └── chapter04/                   # 第4章示例
-├── scripts/                         # 脚本文件（可选）
-├── docs/                            # 本文档目录
-└── pom.xml                          # Maven配置
+├── src/main/java/cn/flinkstudy/     # 重新组织的代码包结构
+│   ├── basic/                      # 基础概念和入门示例
+│   │   ├── batch/                  # 批处理示例
+│   │   │   └── DataBatchJob.java
+│   │   └── streaming/              # 流处理基础
+│   │       └── DataStreamJob.java
+│   ├── wordcount/                  # 词频统计专题
+│   │   ├── core/                   # 核心词频统计实现
+│   │   │   └── BasicWordCount.java
+│   │   ├── sources/                # 不同数据源的词频统计
+│   │   │   ├── socket/             # Socket数据源
+│   │   │   │   ├── SocketWordCount.java
+│   │   │   │   └── SocketWindowWordCount.java
+│   │   │   ├── kafka/              # Kafka数据源
+│   │   │   │   └── KafkaWordCount.java
+│   │   │   └── custom/             # 自定义数据源
+│   │   │       ├── CustomSourceWordCount.java
+│   │   │       └── ParallelCustomSourceWordCount.java
+│   │   └── advanced/               # 高级词频统计功能
+│   │       └── WindowWordCount.java
+│   ├── connectors/                 # 连接器示例
+│   │   ├── kafka/                  # Kafka连接器
+│   │   └── socket/                 # Socket连接器
+│   ├── windows/                    # 窗口操作专题
+│   │   ├── tumbling/               # 滚动窗口
+│   │   ├── sliding/                # 滑动窗口
+│   │   └── session/                # 会话窗口
+│   └── utils/                      # 工具类和通用组件
+│       ├── sources/                # 数据源工具
+│       └── functions/              # 自定义函数
+├── docs/                           # 📚 文档目录
+├── scripts/                        # 🛠️ 脚本目录
+└── pom.xml                         # Maven配置
 ```
 
 ## 学习路径
 
-1. **基础概念**
-   - 批处理作业（DataBatchJob.java）
-   - 流处理作业（DataStreamJob.java）
+### 🚀 新手入门路径
+1. **基础概念** (`cn.flinkstudy.basic`)
+   - 批处理入门：`DataBatchJob.java`
+   - 流处理入门：`DataStreamJob.java`
 
-2. **数据源和连接器**
-   - Socket数据源（SocketWordCount.java）
-   - 自定义数据源（StreamingWordCount.java）
-   - Kafka连接器（WordCountKafkaInStdOut.java）
+2. **词频统计专题** (`cn.flinkstudy.wordcount`)
+   - 核心实现：`BasicWordCount.java`
+   - Socket数据源：`SocketWordCount.java` ⭐ **推荐从这开始**
+   - 窗口版本：`SocketWindowWordCount.java`
 
-3. **流处理核心概念**
-   - 窗口操作（WindowWordCount.java）
-   - 并行处理（ParallelStreamingWordCount.java）
+3. **数据源和连接器** (`cn.flinkstudy.wordcount.sources`)
+   - 自定义数据源：`CustomSourceWordCount.java`
+   - 并行数据源：`ParallelCustomSourceWordCount.java`
+   - Kafka数据源：`KafkaWordCount.java`
+
+4. **高级概念** (`cn.flinkstudy.wordcount.advanced`)
+   - 窗口操作：`WindowWordCount.java`
+
+### 🎯 按场景学习
+- **Socket源学习**：`wordcount/sources/socket/` 包下所有示例
+- **自定义源学习**：`wordcount/sources/custom/` 包下所有示例
+- **连接器学习**：`wordcount/sources/kafka/` 包下所有示例
+- **窗口操作学习**：`wordcount/advanced/` 和 `windows/` 包下所有示例
+
+### 📚 对应书中章节
+- **4.1章节**：Socket WordCount → `wordcount/sources/socket/SocketWordCount.java`
+- **窗口操作**：详见 `wordcount/advanced/` 目录
 
 ## 使用建议
 
