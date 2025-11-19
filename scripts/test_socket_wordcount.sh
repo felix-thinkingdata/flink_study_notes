@@ -13,6 +13,7 @@ echo ""
 
 # 检查端口是否被占用
 check_port() {
+
     local port=$1
     if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1; then
         echo "警告: 端口 $port 已被占用"
