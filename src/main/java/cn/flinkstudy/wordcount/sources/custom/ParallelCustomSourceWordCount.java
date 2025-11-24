@@ -36,9 +36,6 @@ public class ParallelCustomSourceWordCount {
         // 创建流式执行环境
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        // 设置并行度为4，可以看到并行效果
-        env.setParallelism(4);
-
         // 创建并行数据源
         DataStream<String> wordStream = env.addSource(new ParallelWordSource());
 
